@@ -1,0 +1,76 @@
+<section mbr-id="_anchor" class="mbr-section" mbr-bg-color="_params.bgColor">
+  <div class="container">
+    <div class="title">
+      <h3 class="mbr-section-title display-2" mbr-if="_params.showTitle" mbr-html="title" data-app-edit="content" data-app-placeholder="Type Title" data-app-selector=".mbr-section-title"></h3>
+      <div class="lead" mbr-if="_params.showCaption" mbr-html="caption" data-app-edit="content" data-multiline data-app-placeholder="Type Caption"></div>
+    </div>
+  </div>
+  <style>
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 100px auto;
+      background-color: #333;
+
+      border-radius: 100%;
+      -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+      animation: sk-scaleout 1.0s infinite ease-in-out;
+    }
+
+    @-webkit-keyframes sk-scaleout {
+      0% {
+        -webkit-transform: scale(0)
+      }
+      100% {
+        -webkit-transform: scale(1.0);
+        opacity: 0;
+      }
+    }
+
+    @keyframes sk-scaleout {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+      100% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+        opacity: 0;
+      }
+    }
+  </style>
+  <div id="firebase-spinner" class="spinner"></div>
+  <div class="container">
+    <div id="firebase-articles" class="row" mbr-data-articles-number="_params.articlesNumber" mbr-data-show-author-name="_params.showArticleAuthorName" mbr-data-show-author-image="_params.showArticleAuthorImage" mbr-data-show-date="_params.showArticleDate"  mbr-data-header-bg-color="_params.panelColor"  mbr-data-article-page="_params.articlePage">
+
+      <div class="panel panel-default">
+        <div class="panel-heading" mbr-bg-color="_params.panelColor">
+
+          <div class="article-photo" style="float: left" mbr-if="_params.showArticleAuthorImage">
+            <img class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%;" />
+          </div>
+          <div>
+            <h2>Article title</h2>
+            <div mbr-if="_params.showArticleAuthorName">Author Name</div>
+            <small mbr-if="_params.showArticleDate">12.12.1212</small>
+          </div>
+
+        </div>
+        <div class="panel-body">
+          <p>Lorem ipsum dolor sit amet, altera propriae iudicabit eos ne. Vel ut accusam tacimates, prima oratio ius ea. Et duo alii verterem principes, te quo putent melius fabulas, ei scripta eligendi appareat duo.</p>
+        </div>
+        <button type="button" class="btn btn-default btn-lg" style="float: right">Read more</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      var articles = document.getElementById('firebase-articles');
+      var articlesNum = articles.getAttribute("data-articles-number");
+      var recentPostsRef = firebase.database().ref('posts').orderByChild("order").limitToFirst(Number(articlesNum));
+      fetchPosts(articles, recentPostsRef);
+    });
+  </script>
+</section>

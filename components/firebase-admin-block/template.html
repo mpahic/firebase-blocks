@@ -1,0 +1,94 @@
+
+<div style="padding-top:150px">
+  <a class="btn btn-primary" href="#" onclick="signInOut()" id="signIn">Sign In</a>
+  <a class="btn btn-primary" href="#" onclick="newArticle()" id="newArticle"><span class="mbri-new-file mbr-iconfont mbr-iconfont-btn"></span>New Article</a>
+  <div style="text-align: right;">
+    <a href="#" class="btn btn-primary" onclick="save()">Save</a>
+    <a href="#" class="btn btn-primary" onclick="cancel()">Cancel</a>
+  </div>
+</div>
+<div id="form" style="display: none">
+
+          <div class="mbr-section mbr-section__container mbr-section__container--middle"  style="background-color: rgb(255, 255, 255); padding-top: 120px; padding-bottom: 0px;">
+              <div class="container">
+                  <div class="row">
+                      <div class="col-xs-12 text-xs-center">
+                          <h3 class="mbr-section-title display-2" id="title" contenteditable="true">Article</h3>
+
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
+      <div class="mbr-section mbr-section-nopadding">
+          <div class="container">
+              <div class="row">
+
+                  <div class="col-xs-12">
+
+                      <div class="mbr-testimonial card mbr-testimonial-lg">
+                          <div class="card-block" id="intro" contenteditable="true">Intro</div>
+                          <div class="mbr-author card-footer">
+                              <div class="mbr-author-img"><img class="img-circle" id="authorPic"></div>
+                          </div>
+                      </div>
+
+                  </div>
+
+              </div>
+
+          </div>
+      </div>
+  </section>
+
+  <section class="mbr-section article mbr-section__container" id="content1-l" style="background-color: rgb(255, 255, 255); padding-top: 20px; padding-bottom: 20px;">
+
+      <div class="container">
+          <div class="row">
+              <div class="col-xs-12 lead" id="body"  style="padding-bottom: 20px;" contenteditable="true">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </div>
+
+          </div>
+      </div>
+
+  </section>
+</div>
+
+<section class="engine"><a rel="external" href="https://mobirise.com">Mobirise Web Page Maker</a></section><section class="mbr-section mbr-after-navbar" id="testimonials2-h" style="background-color: rgb(255, 255, 255); padding-top: 120px; padding-bottom: 80px;">
+
+    <div class="mbr-section mbr-section-nopadding">
+        <div class="container">
+            <div class="row">
+
+                <div id="articles" class="col-xs-12">
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      var recentPostsRef = firebase.database().ref('posts').orderByChild("order").limitToFirst(100);
+      fetchAdminPosts(recentPostsRef);
+
+      firebase.auth().onAuthStateChanged(onAuthStateChanged);
+
+      function onAuthStateChanged(user) {
+
+        if (user) {
+          document.getElementById('signIn').innerHTML = "Sign out";
+          document.getElementById('newArticle').style.display = 'block';
+          writeUserData(user.uid, user.displayName, user.email, user.photoURL);
+        } else {
+          document.getElementById('signIn').innerHTML = "Sign in";
+          document.getElementById('newArticle').style.display = 'none';
+        }
+      }
+    });
+  </script>
+</section>

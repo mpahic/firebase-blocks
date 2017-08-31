@@ -1,0 +1,78 @@
+<section mbr-id="_anchor" class="mbr-section" mbr-bg-color="_params.bgColor">
+  <div class="container">
+    <div class="title">
+      <h3 class="mbr-section-title display-2" mbr-if="_params.showTitle" mbr-html="title" data-app-edit="content" data-app-placeholder="Type Title" data-app-selector=".mbr-section-title"></h3>
+      <div class="lead" mbr-if="_params.showCaption" mbr-html="caption" data-app-edit="content" data-multiline data-app-placeholder="Type Caption"></div>
+    </div>
+  </div>
+  <style>
+    .spinner {
+      width: 40px;
+      height: 40px;
+      margin: 100px auto;
+      background-color: #333;
+
+      border-radius: 100%;
+      -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+      animation: sk-scaleout 1.0s infinite ease-in-out;
+    }
+
+    @-webkit-keyframes sk-scaleout {
+      0% {
+        -webkit-transform: scale(0)
+      }
+      100% {
+        -webkit-transform: scale(1.0);
+        opacity: 0;
+      }
+    }
+
+    @keyframes sk-scaleout {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
+      }
+      100% {
+        -webkit-transform: scale(1.0);
+        transform: scale(1.0);
+        opacity: 0;
+      }
+    }
+  </style>
+  <div id="firebase-spinner" class="spinner"></div>
+  <div class="container">
+    <div class="row"  mbr-data-show-author-name="_params.showArticleAuthorName" mbr-data-show-author-image="_params.showArticleAuthorImage" mbr-data-show-date="_params.showArticleDate"  mbr-data-header-bg-color="_params.panelColor" >
+
+      <div class="panel panel-default">
+        <div class="panel-heading" mbr-bg-color="_params.panelColor">
+
+          <div class="article-photo" style="float: left" id="firebase-author-pic">
+            <img class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" id="firebase-authorPic"/>
+          </div>
+          <div>
+            <h2 id="firebase-title"></h2>
+            <div id="firebase-author-name"></div>
+            <small id="firebase-article-date"></small>
+          </div>
+
+        </div>
+        <div class="panel-body" id="firebase-intro">
+
+        </div>
+      </div>
+
+    </div>
+    <div id="firebase-body">
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      var articleId = getParameterByName('id');
+      if(articleId == null) {
+
+      }
+      fetchPost(articleId);
+    });
+  </script>
+</section>

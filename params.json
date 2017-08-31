@@ -1,0 +1,15 @@
+{
+   "name" : "Firebase Blocks",
+   "alias" : "firebase-blocks",
+   "version" : 1,
+   "minAppVersion" : "1.0",
+   "appScript": true,
+   "plugins": ["firebase-blocks-plugin"],
+    "components": [
+        "components/firebase-admin-block",
+        "components/firebase-article-block",
+        "components/firebase-blog-list-block"
+    ],
+   "description" : "Blocks for connection to Firebase",
+   "logo" : "thumbnail.png"
+}

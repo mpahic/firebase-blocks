@@ -1,7 +1,7 @@
 # firebase-blocks
 Mobirise blocks using Firebase
 
-Download zip file here, and rename its extension to .mbrext
+Download zip file <a href="https://goo.gl/HxJzC4">firebase-blocks.mbrext</a>
 After that import the file in Mobirise under themes and extensions.
 
 <p>1. Open Sites List</p>

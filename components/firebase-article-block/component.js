@@ -3,16 +3,6 @@ mbrApp.loadComponents("firebase-blocks/components", {
     _group: "Article",
     _once: "firebase-blog-list",
     _params: {
-      showTitle: {
-        type: "switch",
-        title: "Show Title",
-        default: !0
-      },
-      showCaption: {
-        type: "switch",
-        title: "Show Caption",
-        default: !0
-      },
       showArticleAuthorName: {
         type: "switch",
         title: "Show Author Name",
@@ -23,10 +13,21 @@ mbrApp.loadComponents("firebase-blocks/components", {
         title: "Show Author Image",
         default: !0
       },
+      showArticleIntro: {
+        type: "switch",
+        title: "Show Intro",
+        default: !0
+      },
       showArticleDate: {
         type: "switch",
         title: "Show Date",
         default: !0
+      },
+      dateFormat: {
+        type: "text",
+        title: "Date format",
+        default: "dd Mmm, yyyy",
+        condition: ["showArticleDate"]
       },
       panelColor: {
         type: "color",
@@ -70,6 +71,11 @@ mbrApp.loadComponents("firebase-blocks/components", {
         "padding-top": 3 * this._params.paddingTop + "rem",
         "padding-bottom": 3 * this._params.paddingBottom + "rem"
       });
+      b.find("#firebase-title").empty();
+      b.find("#firebase-intro").empty();
+      b.find("#firebase-author-name").empty();
+      b.find("#firebase-timestamp").empty();
+      b.find("#firebase-body").empty();
     },
 
   }

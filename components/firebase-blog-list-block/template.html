@@ -1,10 +1,4 @@
 <section mbr-id="_anchor" class="mbr-section" mbr-bg-color="_params.bgColor">
-  <div class="container">
-    <div class="title">
-      <h3 class="mbr-section-title display-2" mbr-if="_params.showTitle" mbr-html="title" data-app-edit="content" data-app-placeholder="Type Title" data-app-selector=".mbr-section-title"></h3>
-      <div class="lead" mbr-if="_params.showCaption" mbr-html="caption" data-app-edit="content" data-multiline data-app-placeholder="Type Caption"></div>
-    </div>
-  </div>
   <style>
     .spinner {
       width: 40px;
@@ -39,34 +33,66 @@
       }
     }
   </style>
-  <div id="firebase-spinner" class="spinner"></div>
+  <div class="blog-header">
+    <div class="container">
+      <h1 class="blog-title" mbr-if="_params.showTitle" mbr-html="title" data-app-edit="content" data-app-placeholder="Type Title" data-app-selector=".mbr-section-title"></h1>
+      <p class="lead blog-description" mbr-if="_params.showCaption" mbr-html="caption" data-app-edit="content" data-multiline data-app-placeholder="Type Caption"></p>
+    </div>
+  </div>
+  <div id="firebase-spinner" class="spinner" style="display: none"></div>
+
   <div class="container">
-    <div id="firebase-articles" class="row" mbr-data-articles-number="_params.articlesNumber" mbr-data-show-author-name="_params.showArticleAuthorName" mbr-data-show-author-image="_params.showArticleAuthorImage" mbr-data-show-date="_params.showArticleDate"  mbr-data-header-bg-color="_params.panelColor"  mbr-data-article-page="_params.articlePage">
 
-      <div class="panel panel-default">
-        <div class="panel-heading" mbr-bg-color="_params.panelColor">
+    <div class="row">
 
+      <div class="col-sm-12 blog-main" id="firebase-articles" mbr-data-articles-number="_params.articlesNumber" mbr-data-show-author-name="_params.showArticleAuthorName" mbr-data-show-author-image="_params.showArticleAuthorImage" mbr-data-show-date="_params.showArticleDate" mbr-data-date-format="_params.dateFormat"
+        mbr-data-header-bg-color="_params.panelColor" mbr-data-article-page="_params.articlePage">
+
+        <div class="blog-post">
           <div class="article-photo" style="float: left" mbr-if="_params.showArticleAuthorImage">
             <img class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%;" />
           </div>
-          <div>
-            <h2>Article title</h2>
-            <div mbr-if="_params.showArticleAuthorName">Author Name</div>
-            <small mbr-if="_params.showArticleDate">12.12.1212</small>
-          </div>
+          <h2 class="blog-post-title"><a href="">Sample blog post</a></h2>
+          <p class="blog-post-meta"><small mbr-if="_params.showArticleDate">January 1, 2014</small> <span mbr-if="_params.showArticleAuthorName">by Mark</span></p>
 
+          <p>This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
+
+          <a href="#">Read more...</a>
+          <hr>
         </div>
-        <div class="panel-body">
-          <p>Lorem ipsum dolor sit amet, altera propriae iudicabit eos ne. Vel ut accusam tacimates, prima oratio ius ea. Et duo alii verterem principes, te quo putent melius fabulas, ei scripta eligendi appareat duo.</p>
+        <!-- /.blog-post -->
+
+        <div class="blog-post">
+          <div class="article-photo" style="float: left" mbr-if="_params.showArticleAuthorImage">
+            <img class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" />
+          </div>
+          <h2 class="blog-post-title"><a href="">Another blog post</a></h2>
+          <p class="blog-post-meta"><small mbr-if="_params.showArticleDate">January 12, 2014</small> <span mbr-if="_params.showArticleAuthorName">by John</span></p>
+
+          <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur
+            purus sit amet fermentum.</p>
+
+          <a href="#">Read more...</a>
+          <hr>
         </div>
-        <button type="button" class="btn btn-default btn-lg" style="float: right">Read more</button>
+        <!-- /.blog-post -->
+
+        <nav class="blog-pagination navbar-toggler-right">
+          <a class="btn btn-outline-primary" href="#">Older</a>
+          <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
+        </nav>
+
       </div>
+      <!-- /.blog-main -->
 
     </div>
+    <!-- /.row -->
+
   </div>
+  <!-- /.container -->
 
   <script>
-    document.addEventListener("DOMContentLoaded", function(){
+    document.addEventListener("DOMContentLoaded", function() {
       var articles = document.getElementById('firebase-articles');
       var articlesNum = articles.getAttribute("data-articles-number");
       var recentPostsRef = firebase.database().ref('posts').orderByChild("order").limitToFirst(Number(articlesNum));

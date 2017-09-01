@@ -3,14 +3,24 @@ mbrApp.loadComponents("firebase-blocks/components", {
     _group: "Article",
     _once: "firebase-blog-list",
     _params: {
-      showTitle: {
+      showFacebookLogin: {
         type: "switch",
-        title: "Show Title",
+        title: "Show Facebook Login",
         default: !0
       },
-      showCaption: {
+      showGoogleLogin: {
         type: "switch",
-        title: "Show Caption",
+        title: "Show Google Login",
+        default: !0
+      },
+      showTwitterLogin: {
+        type: "switch",
+        title: "Show Twitter login",
+        default: !0
+      },
+      showEmailLogin: {
+        type: "switch",
+        title: "Show Email login",
         default: !0
       },
       showArticleAuthorName: {

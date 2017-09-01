@@ -1,94 +1,114 @@
+<section mbr-id="_anchor" class="mbr-section" mbr-bg-color="_params.bgColor">
+  <style>
+  .btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+  }
+  </style>
+  <div class="container" id="login-form">
 
-<div style="padding-top:150px">
-  <a class="btn btn-primary" href="#" onclick="signInOut()" id="signIn">Sign In</a>
-  <a class="btn btn-primary" href="#" onclick="newArticle()" id="newArticle"><span class="mbri-new-file mbr-iconfont mbr-iconfont-btn"></span>New Article</a>
-  <div style="text-align: right;">
-    <a href="#" class="btn btn-primary" onclick="save()">Save</a>
-    <a href="#" class="btn btn-primary" onclick="cancel()">Cancel</a>
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <button class="btn btn-lg btn-primary btn-block" onclick="loginGoogle()">Google Login</button>
+    <button class="btn btn-lg btn-primary btn-block" onclick="loginFacebook()">Facebook Login</button>
+    <button class="btn btn-lg btn-primary btn-block" onclick="loginTwitter()">Twitter Login</button>
+    <form class="form-signin" mbr-if="_params.showEmailLogin">
+      <label for="inputEmail" class="sr-only">Email address</label>
+      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+      <label for="inputPassword" class="sr-only">Password</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+      <span id="admin-login-error-block" class="help-block" style="display:none">Password error</span>
+
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
   </div>
-</div>
-<div id="form" style="display: none">
+  <div class="container" id="login-panel" style="display: none">
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link" onclick="signOut()">Sign Out</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#articles" role="tab">Articles</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#gallery" role="tab">Gallery</a>
+      </li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="articles" role="tabpanel">
 
-          <div class="mbr-section mbr-section__container mbr-section__container--middle"  style="background-color: rgb(255, 255, 255); padding-top: 120px; padding-bottom: 0px;">
-              <div class="container">
-                  <div class="row">
-                      <div class="col-xs-12 text-xs-center">
-                          <h3 class="mbr-section-title display-2" id="title" contenteditable="true">Article</h3>
-
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-
-      <div class="mbr-section mbr-section-nopadding">
-          <div class="container">
-              <div class="row">
-
-                  <div class="col-xs-12">
-
-                      <div class="mbr-testimonial card mbr-testimonial-lg">
-                          <div class="card-block" id="intro" contenteditable="true">Intro</div>
-                          <div class="mbr-author card-footer">
-                              <div class="mbr-author-img"><img class="img-circle" id="authorPic"></div>
-                          </div>
-                      </div>
-
-                  </div>
-
-              </div>
-
-          </div>
-      </div>
-  </section>
-
-  <section class="mbr-section article mbr-section__container" id="content1-l" style="background-color: rgb(255, 255, 255); padding-top: 20px; padding-bottom: 20px;">
-
-      <div class="container">
-          <div class="row">
-              <div class="col-xs-12 lead" id="body"  style="padding-bottom: 20px;" contenteditable="true">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </div>
-
-          </div>
-      </div>
-
-  </section>
-</div>
-
-<section class="engine"><a rel="external" href="https://mobirise.com">Mobirise Web Page Maker</a></section><section class="mbr-section mbr-after-navbar" id="testimonials2-h" style="background-color: rgb(255, 255, 255); padding-top: 120px; padding-bottom: 80px;">
-
-    <div class="mbr-section mbr-section-nopadding">
         <div class="container">
-            <div class="row">
+          <div class="row">
+            <div class="col-sm-8 blog-main" id="new-article-form">
 
-                <div id="articles" class="col-xs-12">
+              <div class="blog-post">
+                <div id="firebase-authorPic" class="article-photo" style="float: left" >
+                  <img id="authorPic" class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" />
                 </div>
+                <h2 id="title" contenteditable="true" data-placeholder="Article title" class="blog-post-title">Article Title</h2>
+                <p class="blog-post-meta"><small id="firebase-timestamp" >January 12, 2014</small>
+                  <span id="author-name">by John</span>
+                </p>
+
+                <p class="panel-body" id="intro" contenteditable="true" placeholder="Write some intro..." >This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
+
+                <hr>
+                <div id="body" contenteditable="true">
+                  <p>Just write stuff ...</p>
+
+                </div><!-- /#body -->
+
+              </div>
+              <div style="text-align: right;">
+                <a href="#" class="btn btn-primary" id="create-article" onclick="save()">Create</a>
+                <a href="#" class="btn btn-primary" id="save-article" onclick="save()" style="display: none">Save</a>
+                <a href="#" class="btn btn-secondary" id="save-cancel" onclick="cancel()">Cancel</a>
+              </div>
 
             </div>
-
+            <!-- /.blog-main -->
+            <div class="col-sm-3 offset-sm-1 blog-sidebar">
+              <div class="sidebar-module">
+                <h4>Articles</h4>
+                <ol class="list-unstyled" id="article-list">
+                </ol>
+              </div>
+            </div>
+            <!-- /.blog-sidebar -->
+          </div>
         </div>
+
+      </div>
+      <div class="tab-pane" id="gallery" role="tabpanel">In development ...</div>
     </div>
+
+  </div>
 </section>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var recentPostsRef = firebase.database().ref('posts').orderByChild("order").limitToFirst(100);
+    fetchAdminPosts(recentPostsRef);
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function(){
-      var recentPostsRef = firebase.database().ref('posts').orderByChild("order").limitToFirst(100);
-      fetchAdminPosts(recentPostsRef);
+    firebase.auth().onAuthStateChanged(onAuthStateChanged);
 
-      firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    function onAuthStateChanged(user) {
 
-      function onAuthStateChanged(user) {
+      if (user) {
+        writeUserData(user.uid, user.displayName, user.email, user.photoURL);
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('login-panel').style.display = 'block';
+        cancel();
+      } else {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('login-panel').style.display = 'none';
 
-        if (user) {
-          document.getElementById('signIn').innerHTML = "Sign out";
-          document.getElementById('newArticle').style.display = 'block';
-          writeUserData(user.uid, user.displayName, user.email, user.photoURL);
-        } else {
-          document.getElementById('signIn').innerHTML = "Sign in";
-          document.getElementById('newArticle').style.display = 'none';
-        }
       }
-    });
-  </script>
-</section>
+    }
+  });
+</script>

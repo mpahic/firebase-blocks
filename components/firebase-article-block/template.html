@@ -1,10 +1,4 @@
 <section mbr-id="_anchor" class="mbr-section" mbr-bg-color="_params.bgColor">
-  <div class="container">
-    <div class="title">
-      <h3 class="mbr-section-title display-2" mbr-if="_params.showTitle" mbr-html="title" data-app-edit="content" data-app-placeholder="Type Title" data-app-selector=".mbr-section-title"></h3>
-      <div class="lead" mbr-if="_params.showCaption" mbr-html="caption" data-app-edit="content" data-multiline data-app-placeholder="Type Caption"></div>
-    </div>
-  </div>
   <style>
     .spinner {
       width: 40px;
@@ -39,37 +33,65 @@
       }
     }
   </style>
-  <div id="firebase-spinner" class="spinner"></div>
+  <div id="firebase-spinner" class="spinner" style="display: none"></div>
+
   <div class="container">
-    <div class="row"  mbr-data-show-author-name="_params.showArticleAuthorName" mbr-data-show-author-image="_params.showArticleAuthorImage" mbr-data-show-date="_params.showArticleDate"  mbr-data-header-bg-color="_params.panelColor" >
 
-      <div class="panel panel-default">
-        <div class="panel-heading" mbr-bg-color="_params.panelColor">
+    <div class="row">
 
-          <div class="article-photo" style="float: left" id="firebase-author-pic">
-            <img class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" id="firebase-authorPic"/>
+      <div class="col-sm-12 blog-main" mbr-data-header-bg-color="_params.panelColor">
+
+        <div class="blog-post">
+          <div id="firebase-authorPic" class="article-photo" style="float: left" mbr-if="_params.showArticleAuthorImage">
+            <img id="firebase-author-image" class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" />
           </div>
-          <div>
-            <h2 id="firebase-title"></h2>
-            <div id="firebase-author-name"></div>
-            <small id="firebase-article-date"></small>
-          </div>
+          <h2 id="firebase-title" class="blog-post-title">Sample blog post</h2>
+          <p class="blog-post-meta"><small id="firebase-timestamp" mbr-data-date-format="_params.dateFormat" mbr-if="_params.showArticleDate">January 12, 2014</small> <span id="firebase-author-name" mbr-if="_params.showArticleAuthorName">by John</span></p>
+
+          <p class="panel-body" id="firebase-intro" mbr-if="_params.showArticleIntro">This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
+
+          <hr mbr-data-show="_params.showArticleIntro">
+          <div id="firebase-body">
+            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
+            <blockquote>
+              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+            </blockquote>
+            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+            <h2>Heading</h2>
+            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            <h3>Sub-heading</h3>
+            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+            <pre><code>Example code block</code></pre>
+            <p>Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
+            <h3>Sub-heading</h3>
+            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+            <ul>
+              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
+              <li>Donec id elit non mi porta gravida at eget metus.</li>
+              <li>Nulla vitae elit libero, a pharetra augue.</li>
+            </ul>
+            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
+            <ol>
+              <li>Vestibulum id ligula porta felis euismod semper.</li>
+              <li>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</li>
+              <li>Maecenas sed diam eget risus varius blandit sit amet non magna.</li>
+            </ol>
+            <p>Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.</p>
+          </div><!-- /#firebase-body -->
 
         </div>
-        <div class="panel-body" id="firebase-intro">
-
-        </div>
+        <!-- /.blog-post -->
       </div>
-
+      <!-- /.blog-main -->
     </div>
-    <div id="firebase-body">
-    </div>
+    <!-- /.row -->
   </div>
+  <!-- /.container -->
 
   <script>
-    document.addEventListener("DOMContentLoaded", function(){
+    document.addEventListener("DOMContentLoaded", function() {
       var articleId = getParameterByName('id');
-      if(articleId == null) {
+      if (articleId == null) {
 
       }
       fetchPost(articleId);

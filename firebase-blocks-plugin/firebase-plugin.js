@@ -1,34 +1,38 @@
 var fetchPosts = function(articles, postsRef) {
+  document.getElementById('firebase-spinner').style.display = 'block';
   postsRef.on('child_added', function(data) {
     var author = data.val().author || 'Anonymous';
 
     var showAuthorName = articles.getAttribute("data-show-author-name");
     var showAuthorImage = articles.getAttribute("data-show-author-image");
-    createPostElement(articles, data.key, data.val().title, data.val().body, author, data.val().uid, data.val().authorPic, data.val().intro, showAuthorName, showAuthorImage);
+    var showArticleDate = articles.getAttribute("data-show-date");
+    var dateFormat = articles.getAttribute("data-date-format");
+    createPostElement(articles, data.key, data.val().title, data.val().body, author,
+    data.val().uid, data.val().authorPic, data.val().intro, data.val().timestamp,
+    showAuthorName, showAuthorImage, showArticleDate, dateFormat);
 
     document.getElementById('firebase-spinner').style.display = 'none';
   });
 };
 
-function createPostElement(articles, postId, title, text, author, authorId, authorPic, intro, showAuthorName, showAuthorImage) {
+function createPostElement(articles, postId, title, text, author, authorId, authorPic, intro, timestamp, showAuthorName, showAuthorImage, showArticleDate, dateFormat) {
 
   var headerBgColor = articles.getAttribute("data-header-bg-color");
   var articlePage = articles.getAttribute("data-article-page");
-  var blogHtml = '<div class="panel panel-default">'+
-      '  <div class="panel-heading" style="background-color: '+headerBgColor+';">'+
-      (showAuthorImage =="true"? '    <div class="article-photo" style="float: left">'+
-      '      <img class="img-responsive" src="'+authorPic+'" style="margin-right:20px; border-radius: 50%; height:100px" />'+
-      '    </div>' : '')+
-      '    <div>'+
-      '      <h2>'+title+'</h2>'+
-      (showAuthorName =="true"? '      <div>'+author+'</div>' : "")+
-      '    </div>'+
-      '  </div>'+
-      '  <div class="panel-body">'+
-      '    <p>'+intro+'</p>'+
-      '  </div>'+
-      '  <a class="btn" href="./'+articlePage+'?id='+postId+'">Read more</a>'+
-      '</div>';
+  var blogHtml = '<div class="blog-post">'+
+        (showAuthorImage =="true"? '  <div class="article-photo" style="float: left" >'+
+        '    <img class="img-responsive" src="'+authorPic+'" style="margin-right:20px; border-radius: 50%; height: 100px" />'+
+        '  </div>': '')+
+        '  <h2 class="blog-post-title"><a href="./'+articlePage+'?id='+postId+'">'+title+'</a></h2>'+
+        '  <p class="blog-post-meta">'+
+        (showArticleDate =="true"? '<small>'+formatDateFromPattern(dateFormat, new Date(timestamp))+'</small> ': "")+
+        (showAuthorName =="true"? '<span>by '+author+'</span>': "")+
+        '</p>'+
+        '  <p>'+intro+'</p>'+
+        '  <a href="./'+articlePage+'?id='+postId+'">Read more...</a>'+
+        '  <hr>'+
+        '</div>'+
+        '<!-- /.blog-post -->'
 
   var e = document.createElement('div');
   e.innerHTML = blogHtml;
@@ -37,6 +41,48 @@ function createPostElement(articles, postId, title, text, author, authorId, auth
       articles.appendChild(e.firstChild);
   }
 }
+
+function formatDateFromPattern(f, date) {
+    var nm = getMonthName(date);
+    var nd = getDayName(date);
+    f = f.replace(/yyyy/g, date.getFullYear());
+    f = f.replace(/yy/g, String(date.getFullYear()).substr(2,2));
+    f = f.replace(/MMM/g, nm.substr(0,3).toUpperCase());
+    f = f.replace(/Mmm/g, nm.substr(0,3));
+    f = f.replace(/MM\*/g, nm.toUpperCase());
+    f = f.replace(/Mm\*/g, nm);
+    f = f.replace(/mm/g, padLeft(String(date.getMonth()+1),'0',2));
+    f = f.replace(/DDD/g, nd.substr(0,3).toUpperCase());
+    f = f.replace(/Ddd/g, nd.substr(0,3));
+    f = f.replace(/DD\*/g, nd.toUpperCase());
+    f = f.replace(/Dd\*/g, nd);
+    f = f.replace(/dd/g, padLeft(String(date.getDate()),'0',2));
+    f = f.replace(/d\*/g, date.getDate());
+    return f;
+};
+
+function getMonthName(date) {
+    return date.toLocaleString().replace(/[^a-z]/gi,'');
+};
+
+function getDayName(date) {
+    switch(date.getDay()) {
+        case 0: return 'Sunday';
+        case 1: return 'Monday';
+        case 2: return 'Tuesday';
+        case 3: return 'Wednesday';
+        case 4: return 'Thursday';
+        case 5: return 'Friday';
+        case 6: return 'Saturday';
+    }
+};
+
+function padLeft(string, value, size)
+{
+    var x = string;
+    while (x.length < size) {x = value + x;}
+    return x;
+};
 // Article section
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
@@ -49,6 +95,7 @@ function getParameterByName(name, url) {
 }
 
 function fetchPost(id) {
+  document.getElementById('firebase-spinner').style.display = 'block';
   var post = firebase.database().ref('posts/'+id);
   post.on('child_added', function(data) {
     insertValue(data.key, data.val());
@@ -61,12 +108,17 @@ function fetchPost(id) {
 
 function insertValue(key, value) {
   var e = document.getElementById("firebase-" + key);
-  if(key == 'authorPic') {
-    e.src = value;
-  } else if(e) {
-    e.innerHTML = value;
+  if (e) {
+    if(key == 'authorPic') {
+      e = document.getElementById("firebase-author-image");
+      e.src = value;
+    } else if(key == 'timestamp') {
+      var datePattern = e.getAttribute("data-date-format");
+      e.innerHTML = formatDateFromPattern(datePattern, new Date(value));
+    } else if(e) {
+      e.innerHTML = value;
+    }
   }
-
 }
 
 // Admin section
@@ -86,35 +138,20 @@ var fetchAdminPosts = function(postsRef) {
 function editPostElement(postId, title, text, authorId, authorPic, intro) {
 
   var html =
-      '<div class="container">'+
-          '<div class="row">'+
-              '<div class="col-xs-12 text-xs-center">'+
-                  '<h3 class="mbr-section-title"><a href="#" onclick="editArticle(\''+postId+'\')">'+title+'</a> <a href="#" class="btn btn-primary" onclick="deleteArticle(\''+postId+'\')">Delete</a></h3>'+
-              '</div>'+
-          '</div>'+
-      '</div>';
+    '<button href="#" class="btn btn-danger btn-circle" onclick="deleteArticle(\''+postId+'\')"><i class="glyphicon glyphicon-remove"></i></button>'+
+    ' <a onclick="editArticle(\''+postId+'\')">'+title+'</a>';
 
-  // Create the DOM element from the HTML.
   var article = document.getElementById(postId).innerHTML = html;
 }
 
 function createAdminPostElement(postId, title, text, author, authorId, authorPic, intro) {
 
-  var html =
-  '<div id="'+postId+'" class="mbr-section mbr-section__container mbr-section__container--middle">'+
-      '<div class="container">'+
-          '<div class="row">'+
-              '<div class="col-xs-12 text-xs-center">'+
-                  '<h5 class="mbr-section-title"><a href="#" onclick="editArticle(\''+postId+'\')">'+title+'</a> '+
-                  '<a href="#" class="btn btn-white btn-black-outline" onclick="editArticle(\''+postId+'\')"><span class="mbri-edit mbr-iconfont mbr-iconfont-btn"></span>Edit</a>'+
-                  '<a href="#" class="btn btn-white btn-black-outline" onclick="deleteArticle(\''+postId+'\')"><span class="mbri-delete mbr-iconfont mbr-iconfont-btn"></span>Delete</a></h5>'+
-              '</div>'+
-          '</div>'+
-      '</div>'+
-  '</div>';
+  var html = '<li id="'+postId+'">'+
+  '<button href="#" class="btn btn-danger btn-circle" onclick="deleteArticle(\''+postId+'\')"><i class="glyphicon glyphicon-remove"></i></button>'+
+  '<a onclick="editArticle(\''+postId+'\')">'+title+'</a>'+
+  '</li>';
 
-  // Create the DOM element from the HTML.
-  var articles = document.getElementById('articles');
+  var articles = document.getElementById('article-list');
   var e = document.createElement('div');
   e.innerHTML = html;
 
@@ -131,7 +168,34 @@ function writeUserData(userId, name, email, imageUrl) {
   });
 }
 
-function signInOut() {
+function loginGoogle() {
+  firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  showAdmin();
+}
+
+function loginFacebook() {
+  firebase.auth().signInWithPopup(new firebase.auth.FacebookAuthProvider());
+  showAdmin();
+}
+
+function loginTwitter() {
+  firebase.auth().signInWithPopup(new firebase.auth.TwitterAuthProvider());
+  showAdmin();
+}
+
+function loginEmail() {
+  var email = document.getElementById('admin-email').value;
+  var password = document.getElementById('admin-password').value;
+  firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    var error = document.getElementById('admin-login-error-block');
+    error.style.display = 'block';
+    error.innerHTML = error.message;
+  })
+}
+
+function signOut() {
   var user = firebase.auth().currentUser;
 
   if(user) {
@@ -141,27 +205,26 @@ function signInOut() {
       console.error('Sign Out Error', error);
     })
   } else {
-    firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    cancel();
   }
-  form.style.display = 'none';
 }
 
 function newArticle() {
   var user = firebase.auth().currentUser;
   if(user) {
     editableId = null;
-    var form = document.getElementById('form');
-    form.style.display = 'block';
-    document.getElementById('title').innerHTML = 'New Article';
-    document.getElementById('intro').innerHTML = 'Please insert some intro';
-    document.getElementById('body').innerHTML = 'Here is main article body';
+    document.getElementById('create-article').style.display = 'inline-block';
+    document.getElementById('save-article').style.display = 'none';
+    document.getElementById('title').innerHTML = 'Article Title';
+    document.getElementById('intro').innerHTML = 'Write some intro here';
+    document.getElementById('body').innerHTML = 'Body of the article...';
     document.getElementById('authorPic').src = user.photoURL;
+    document.getElementById('author-name').innerHTML = user.displayName;
   }
 }
 
 function cancel() {
-  var form = document.getElementById('form');
-  form.style.display = 'none';
+  newArticle();
 }
 
 function save() {
@@ -190,9 +253,7 @@ function save() {
     updates['/posts/' + newPostKey] = postData;
 
     firebase.database().ref().update(updates);
-
-    var form = document.getElementById('form');
-    form.style.display = 'none';
+    newArticle();
   }
 }
 
@@ -201,10 +262,10 @@ function editArticle(id) {
   console.log("editing article" + id);
   var user = firebase.auth().currentUser;
   if(user) {
-    var form = document.getElementById('form');
-    form.style.display = 'block';
     fetchAdminPost(id);
     editableId = id;
+    document.getElementById('create-article').style.display = 'none';
+    document.getElementById('save-article').style.display = 'inline-block';
   }
 
 }

@@ -41,6 +41,17 @@ mbrApp.loadComponents("firebase-blocks/components", {
         title: "Show Date",
         default: !0
       },
+      dateFormat: {
+        type: "text",
+        title: "Date format",
+        default: "dd Mmm, yyyy",
+        condition: ["showArticleDate"]
+      },
+      showSideBar: {
+        type: "switch",
+        title: "Show Side Bar",
+        default: !0
+      },
       panelColor: {
         type: "color",
         title: "Panel Color",
@@ -49,7 +60,7 @@ mbrApp.loadComponents("firebase-blocks/components", {
       articlePage: {
         type: "text",
         title: "Article Page",
-        default: "index.html"
+        default: "article.html"
       },
       paddingTop: {
         type: "range",

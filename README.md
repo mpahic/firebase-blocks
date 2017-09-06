@@ -1,6 +1,9 @@
 # firebase-blocks
 Mobirise blocks using Firebase
 
+You can see the demo here <a href="https://mobirise-firebase-blocks.firebaseapp.com">https://mobirise-firebase-blocks.firebaseapp.com</a>
+
+To install plugin into your application do the following:
 Download zip file <a href="https://goo.gl/HxJzC4">firebase-blocks.mbrext</a>
 After that import the file in Mobirise under themes and extensions.
 

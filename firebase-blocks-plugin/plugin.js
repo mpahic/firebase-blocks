@@ -8,5 +8,10 @@ mbrApp.registerPlugin("firebase-blocks",
 	files: [{
 		src: "firebase-plugin.js",
 		publishOnly: !0
-	}]
+	},
+	{
+		type:"js",
+		src:"//cdn.ckeditor.com/4.7.2/standard/ckeditor.js"
+	}
+]
 });

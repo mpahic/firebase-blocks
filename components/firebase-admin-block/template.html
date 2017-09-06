@@ -13,9 +13,10 @@
   <div class="container" id="login-form">
 
     <h2 class="form-signin-heading">Please sign in</h2>
-    <button class="btn btn-lg btn-danger btn-block" onclick="loginGoogle()">Google Login</button>
-    <button class="btn btn-lg btn-primary btn-block" onclick="loginFacebook()">Facebook Login</button>
-    <button class="btn btn-lg btn-info btn-block" onclick="loginTwitter()">Twitter Login</button>
+    <button mbr-if="_params.showGoogleLogin" class="btn btn-lg btn-danger btn-block" onclick="loginGoogle()">Google Login</button>
+    <button mbr-if="_params.showFacebookLogin" class="btn btn-lg btn-primary btn-block" onclick="loginFacebook()">Facebook Login</button>
+    <button mbr-if="_params.showTwitterLogin" class="btn btn-lg btn-info btn-block" onclick="loginTwitter()">Twitter Login</button>
+
     <form class="form-signin" mbr-if="_params.showEmailLogin">
       <label for="inputEmail" class="sr-only">Email address</label>
       <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
@@ -28,7 +29,7 @@
 
   </div>
   <div class="container" id="login-panel" style="display: none">
-    <ul class="nav nav-tabs" role="tablist">
+    <ul class="nav nav-tabs" role="tablist" id="menu-tabs">
       <li class="nav-item">
         <a href="#" class="nav-link" onclick="signOut()">Sign Out</a>
       </li>
@@ -36,7 +37,7 @@
         <a class="nav-link active" data-toggle="tab" href="#articles" role="tab">Articles</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#gallery" role="tab">Gallery</a>
+        <a class="nav-link" data-toggle="tab" onclick="newArticle()" href="#new-form" role="tab">New Article</a>
       </li>
     </ul>
     <!-- Tab panes -->
@@ -45,35 +46,8 @@
 
         <div class="container">
           <div class="row">
-            <div class="col-sm-8 blog-main" id="new-article-form">
 
-              <div class="blog-post">
-                <div id="firebase-authorPic" class="article-photo" style="float: left" >
-                  <img id="authorPic" class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" />
-                </div>
-                <h2 id="title" contenteditable="true" data-placeholder="Article title" class="blog-post-title">Article Title</h2>
-                <p class="blog-post-meta"><small id="firebase-timestamp" >January 12, 2014</small>
-                  <span id="author-name">by John</span>
-                </p>
-
-                <p class="panel-body" id="intro" contenteditable="true" placeholder="Write some intro..." >This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
-
-                <hr>
-                <div id="body" contenteditable="true">
-                  <p>Just write stuff ...</p>
-
-                </div><!-- /#body -->
-
-              </div>
-              <div style="text-align: right;">
-                <a href="#" class="btn btn-primary" id="create-article" onclick="save()">Create</a>
-                <a href="#" class="btn btn-primary" id="save-article" onclick="save()" style="display: none">Save</a>
-                <a href="#" class="btn btn-secondary" id="save-cancel" onclick="cancel()">Cancel</a>
-              </div>
-
-            </div>
-            <!-- /.blog-main -->
-            <div class="col-sm-3 offset-sm-1 blog-sidebar">
+            <div class="col-sm-12 blog-main">
               <div class="sidebar-module">
                 <h4>Articles</h4>
                 <ol class="list-unstyled" id="article-list">
@@ -85,7 +59,41 @@
         </div>
 
       </div>
-      <div class="tab-pane" id="gallery" role="tabpanel">In development ...</div>
+      <div class="tab-pane" id="new-form" role="tabpanel">
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-12 blog-main" id="new-article-form">
+
+                      <div class="blog-post">
+                        <div id="firebase-authorPic" class="article-photo" style="float: left" >
+                          <img id="authorPic" class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" />
+                        </div>
+                        <h2 id="title" contenteditable="true" data-placeholder="Article title" class="blog-post-title">Article Title</h2>
+                        <p class="blog-post-meta"><small id="firebase-timestamp" >January 12, 2014</small>
+                          <span id="author-name">by John</span>
+                        </p>
+
+                        <p class="panel-body" id="intro" contenteditable="true" placeholder="Write some intro..." >This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
+
+                        <hr>
+                        <div id="body" contenteditable="true">
+                          <p>Just write stuff ...</p>
+
+                        </div><!-- /#body -->
+
+                      </div>
+                      <div style="text-align: right;">
+                        <a href="#" class="btn btn-primary" id="create-article" onclick="save()">Create</a>
+                        <a href="#" class="btn btn-primary" id="save-article" onclick="save()" style="display: none">Save</a>
+                        <a href="#" class="btn btn-secondary" id="save-cancel" onclick="cancel()">Cancel</a>
+                      </div>
+
+                    </div>
+                    <!-- /.blog-main -->
+                  </div>
+                </div>
+      </div>
     </div>
 
   </div>
@@ -110,5 +118,28 @@
 
       }
     }
+
+    CKEDITOR.inline( 'body',{
+        toolbar: [
+    			{ name: 'document', items: [ 'Source' ] },
+    			{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
+    			{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+    			{ name: 'links', items: [ 'Link', 'Unlink' ] },
+    			{ name: 'insert', items: [ 'Image' ] },
+    			{ name: 'styles', items: [ 'Format', 'Styles' ] }
+    		]
+    } );
+
+    CKEDITOR.inline( 'intro',{
+        toolbar: [
+    			{ name: 'document', items: [ 'Source' ] },
+    			{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
+    			{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
+    			{ name: 'links', items: [ 'Link', 'Unlink' ] },
+    			{ name: 'insert', items: [ 'Image' ] },
+    			{ name: 'styles', items: [ 'Format', 'Styles' ] }
+    		]
+    } );
+
   });
 </script>

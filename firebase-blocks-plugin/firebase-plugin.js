@@ -138,8 +138,8 @@ var fetchAdminPosts = function(postsRef) {
 function editPostElement(postId, title, text, authorId, authorPic, intro) {
 
   var html =
-    '<button href="#" class="btn btn-danger btn-circle" onclick="deleteArticle(\''+postId+'\')"><i class="glyphicon glyphicon-remove"></i></button>'+
-    ' <a onclick="editArticle(\''+postId+'\')">'+title+'</a>';
+    '<button href="#" class="btn btn-danger" onclick="deleteArticle(\''+postId+'\')"><i class="glyphicon glyphicon-remove"></i></button>'+
+    ' <a href="#" onclick="editArticle(\''+postId+'\')">'+title+'</a>';
 
   var article = document.getElementById(postId).innerHTML = html;
 }
@@ -147,8 +147,8 @@ function editPostElement(postId, title, text, authorId, authorPic, intro) {
 function createAdminPostElement(postId, title, text, author, authorId, authorPic, intro) {
 
   var html = '<li id="'+postId+'">'+
-  '<button href="#" class="btn btn-danger btn-circle" onclick="deleteArticle(\''+postId+'\')"><i class="glyphicon glyphicon-remove"></i></button>'+
-  '<a onclick="editArticle(\''+postId+'\')">'+title+'</a>'+
+  '<button href="#" class="btn btn-danger" onclick="deleteArticle(\''+postId+'\')">Delete</button>'+
+  '<a href="#" onclick="editArticle(\''+postId+'\')">'+title+'</a>'+
   '</li>';
 
   var articles = document.getElementById('article-list');
@@ -225,6 +225,7 @@ function newArticle() {
 
 function cancel() {
   newArticle();
+  $('#menu-tabs a[href="#articles"]').tab('show');
 }
 
 function save() {
@@ -254,6 +255,7 @@ function save() {
 
     firebase.database().ref().update(updates);
     newArticle();
+    $('#menu-tabs a[href="#articles"]').tab('show');
   }
 }
 
@@ -266,6 +268,8 @@ function editArticle(id) {
     editableId = id;
     document.getElementById('create-article').style.display = 'none';
     document.getElementById('save-article').style.display = 'inline-block';
+
+    $('#menu-tabs a[href="#new-form"]').tab('show');
   }
 
 }
@@ -297,26 +301,6 @@ function deleteArticle(id) {
       //document.getElementById(id).remove();
     }
 }
-/*
-CKEDITOR.inline( 'body',{
-    toolbar: [
-			{ name: 'document', items: [ 'Source' ] },
-			{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
-			{ name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] },
-			{ name: 'links', items: [ 'Link', 'Unlink' ] },
-			{ name: 'insert', items: [ 'Image', 'CodeSnippet' ] },
-			{ name: 'styles', items: [ 'Format', 'Styles' ] }
-		],
-    extraPlugins: 'codesnippet'
-} );
-
-CKEDITOR.inline( 'intro',{
-    toolbar: [
-			{ name: 'basicstyles', items: [ 'Bold', 'Italic' ] },
-			{ name: 'links', items: [ 'Link', 'Unlink' ] },
-			{ name: 'styles', items: [ 'Format', 'Styles' ] }
-		]
-} );
 
 Element.prototype.remove = function() {
     this.parentElement.removeChild(this);
@@ -328,4 +312,3 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
         }
     }
 }
-*/

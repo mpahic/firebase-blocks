@@ -21,11 +21,6 @@ mbrApp.loadComponents("firebase-blocks/components", {
         step: 1,
         default: 10
       },
-      showFullArticle: {
-        type: "switch",
-        title: "Show Full Article",
-        default: !0
-      },
       showArticleAuthorName: {
         type: "switch",
         title: "Show Author Name",
@@ -46,6 +41,21 @@ mbrApp.loadComponents("firebase-blocks/components", {
         title: "Date format",
         default: "dd Mmm, yyyy",
         condition: ["showArticleDate"]
+      },
+      showReadMore: {
+        type: "switch",
+        title: "Show Read more..",
+        default: !0
+      },
+      showOlderPosts: {
+        type: "switch",
+        title: "Show Older Posts",
+        default: !0
+      },
+      dbPath: {
+        type: "text",
+        title: "Database path",
+        default: "posts"
       },
       showSideBar: {
         type: "switch",
@@ -99,7 +109,7 @@ mbrApp.loadComponents("firebase-blocks/components", {
         "padding-top": 3 * this._params.paddingTop + "rem",
         "padding-bottom": 3 * this._params.paddingBottom + "rem"
       });
-      b.find("#firebase-articles").empty();
+      b.find(".blog-post").remove();
     },
     title: "Blog posts",
     caption: "<p>Mobirise firebase plugin allows for you to connect to Firebase web application easily, and provides other functionalities. This particular block lists all of the articles from the realtime database.</p>",

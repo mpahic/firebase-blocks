@@ -10,7 +10,7 @@
     border-radius: 15px;
   }
   </style>
-  <div class="container" id="login-form">
+  <div class="container" id="login-form" mbr-data-db-path="_params.dbPath">
 
     <h2 class="form-signin-heading">Please sign in</h2>
     <button mbr-if="_params.showGoogleLogin" class="btn btn-lg btn-danger btn-block" onclick="loginGoogle()">Google Login</button>
@@ -49,7 +49,6 @@
 
             <div class="col-sm-12 blog-main">
               <div class="sidebar-module">
-                <h4>Articles</h4>
                 <ol class="list-unstyled" id="article-list">
                 </ol>
               </div>
@@ -66,18 +65,18 @@
                     <div class="col-sm-12 blog-main" id="new-article-form">
 
                       <div class="blog-post">
-                        <div id="firebase-authorPic" class="article-photo" style="float: left" >
+                        <div id="firebase-authorPic" mbr-if="_params.showArticleAuthorImage" class="article-photo" style="float: left" >
                           <img id="authorPic" class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" />
                         </div>
                         <h2 id="title" contenteditable="true" data-placeholder="Article title" class="blog-post-title">Article Title</h2>
-                        <p class="blog-post-meta"><small id="firebase-timestamp" >January 12, 2014</small>
-                          <span id="author-name">by John</span>
+                        <p class="blog-post-meta" mbr-if="_params.showArticleDate"><small id="firebase-timestamp" >January 12, 2014</small>
+                          <span id="author-name" mbr-if="_params.showArticleAuthorName">by John</span>
                         </p>
 
                         <p class="panel-body" id="intro" contenteditable="true" placeholder="Write some intro..." >This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
 
                         <hr>
-                        <div id="body" contenteditable="true">
+                        <div mbr-if="_params.showReadMore" id="body" contenteditable="true">
                           <p>Just write stuff ...</p>
 
                         </div><!-- /#body -->
@@ -99,8 +98,11 @@
   </div>
 </section>
 <script>
+  var dbPath = "posts";
   document.addEventListener("DOMContentLoaded", function() {
-    var recentPostsRef = firebase.database().ref('posts').orderByChild("order").limitToFirst(100);
+  var articles = document.getElementById('login-form');
+  dbPath = articles.getAttribute("data-db-path");
+    var recentPostsRef = firebase.database().ref(dbPath).orderByChild("order").limitToFirst(100);
     fetchAdminPosts(recentPostsRef);
 
     firebase.auth().onAuthStateChanged(onAuthStateChanged);

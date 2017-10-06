@@ -29,6 +29,11 @@ mbrApp.loadComponents("firebase-blocks/components", {
         default: "dd Mmm, yyyy",
         condition: ["showArticleDate"]
       },
+      dbPath: {
+        type: "text",
+        title: "Database path",
+        default: "posts"
+      },
       panelColor: {
         type: "color",
         title: "Panel Color",

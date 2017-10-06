@@ -1,21 +1,27 @@
+var lastPostId;
 var fetchPosts = function(articles, postsRef) {
   document.getElementById('firebase-spinner').style.display = 'block';
-  postsRef.on('child_added', function(data) {
-    var author = data.val().author || 'Anonymous';
 
-    var showAuthorName = articles.getAttribute("data-show-author-name");
-    var showAuthorImage = articles.getAttribute("data-show-author-image");
-    var showArticleDate = articles.getAttribute("data-show-date");
-    var dateFormat = articles.getAttribute("data-date-format");
+  var showAuthorName = articles.getAttribute("data-show-author-name");
+  var showAuthorImage = articles.getAttribute("data-show-author-image");
+  var showArticleDate = articles.getAttribute("data-show-date");
+  var dateFormat = articles.getAttribute("data-date-format");
+
+  var showReadMore = articles.getAttribute("data-show-read-more");
+  var showOlderPosts = articles.getAttribute("data-show-older-posts");
+
+  postsRef.on('child_added', function(data) {
+    lastPostId = data.key;
+    var author = data.val().author || 'Anonymous';
     createPostElement(articles, data.key, data.val().title, data.val().body, author,
     data.val().uid, data.val().authorPic, data.val().intro, data.val().timestamp,
-    showAuthorName, showAuthorImage, showArticleDate, dateFormat);
+    showAuthorName, showAuthorImage, showArticleDate, dateFormat, showReadMore);
 
     document.getElementById('firebase-spinner').style.display = 'none';
   });
 };
 
-function createPostElement(articles, postId, title, text, author, authorId, authorPic, intro, timestamp, showAuthorName, showAuthorImage, showArticleDate, dateFormat) {
+function createPostElement(articles, postId, title, text, author, authorId, authorPic, intro, timestamp, showAuthorName, showAuthorImage, showArticleDate, dateFormat, showReadMore) {
 
   var headerBgColor = articles.getAttribute("data-header-bg-color");
   var articlePage = articles.getAttribute("data-article-page");
@@ -23,13 +29,15 @@ function createPostElement(articles, postId, title, text, author, authorId, auth
         (showAuthorImage =="true"? '  <div class="article-photo" style="float: left" >'+
         '    <img class="img-responsive" src="'+authorPic+'" style="margin-right:20px; border-radius: 50%; height: 100px" />'+
         '  </div>': '')+
-        '  <h2 class="blog-post-title"><a href="./'+articlePage+'?id='+postId+'">'+title+'</a></h2>'+
+        '  <h2 class="blog-post-title">' +
+          (showReadMore == "true" ? '<a href="./'+articlePage+'?id='+postId+'">'+title+'</a>' : title) +
+        '  </h2>'+
         '  <p class="blog-post-meta">'+
         (showArticleDate =="true"? '<small>'+formatDateFromPattern(dateFormat, new Date(timestamp))+'</small> ': "")+
         (showAuthorName =="true"? '<span>by '+author+'</span>': "")+
         '</p>'+
         '  <p>'+intro+'</p>'+
-        '  <a href="./'+articlePage+'?id='+postId+'">Read more...</a>'+
+        (showReadMore == "true" ? '  <a href="./'+articlePage+'?id='+postId+'">Read more...</a>' : "") +
         '  <hr>'+
         '</div>'+
         '<!-- /.blog-post -->'
@@ -94,9 +102,9 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-function fetchPost(id) {
+function fetchPost(path, id) {
   document.getElementById('firebase-spinner').style.display = 'block';
-  var post = firebase.database().ref('posts/'+id);
+  var post = firebase.database().ref(path+'/'+id);
   post.on('child_added', function(data) {
     insertValue(data.key, data.val());
     if(data.key === 'title') {
@@ -170,17 +178,17 @@ function writeUserData(userId, name, email, imageUrl) {
 
 function loginGoogle() {
   firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
-  showAdmin();
+//  showAdmin();
 }
 
 function loginFacebook() {
   firebase.auth().signInWithPopup(new firebase.auth.FacebookAuthProvider());
-  showAdmin();
+//  showAdmin();
 }
 
 function loginTwitter() {
   firebase.auth().signInWithPopup(new firebase.auth.TwitterAuthProvider());
-  showAdmin();
+//  showAdmin();
 }
 
 function loginEmail() {
@@ -247,11 +255,11 @@ function save() {
 
     var newPostKey = editableId;
     if(!editableId) {
-      var newPostKey = firebase.database().ref().child('posts').push().key;
+      var newPostKey = firebase.database().ref().child(dbPath).push().key;
     }
     // Write the new post's data simultaneously in the posts list and the user's post list.
     var updates = {};
-    updates['/posts/' + newPostKey] = postData;
+    updates['/'+dbPath+'/' + newPostKey] = postData;
 
     firebase.database().ref().update(updates);
     newArticle();
@@ -274,7 +282,7 @@ function editArticle(id) {
 
 }
 function fetchAdminPost(id) {
-  var post = firebase.database().ref('posts/'+id);
+  var post = firebase.database().ref(dbPath+'/'+id);
   post.on('child_added', function(data) {
     insertAdminValue(data.key, data.val());
     if(data.key = 'title') {
@@ -296,7 +304,7 @@ function deleteArticle(id) {
 
     var user = firebase.auth().currentUser;
     if(user) {
-      var post = firebase.database().ref('posts/'+id);
+      var post = firebase.database().ref(dbPath+'/'+id);
       post.remove();
       //document.getElementById(id).remove();
     }

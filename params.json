@@ -2,7 +2,7 @@
    "name" : "Firebase Blocks",
    "alias" : "firebase-blocks",
    "version" : 1,
-   "minAppVersion" : "1.0",
+   "minAppVersion" : "1.1",
    "appScript": true,
    "plugins": ["firebase-blocks-plugin"],
     "components": [

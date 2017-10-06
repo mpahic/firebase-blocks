@@ -41,7 +41,7 @@
 
       <div class="col-sm-12 blog-main" mbr-data-header-bg-color="_params.panelColor">
 
-        <div class="blog-post">
+        <div id="blog-post" class="blog-post" mbr-data-db-path="_params.dbPath">
           <div id="firebase-authorPic" class="article-photo" style="float: left" mbr-if="_params.showArticleAuthorImage">
             <img id="firebase-author-image" class="img-responsive" src="http://placehold.it/100x100" style="margin-right:20px; border-radius: 50%; height: 100px" />
           </div>
@@ -90,11 +90,13 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+      var articles = document.getElementById('blog-post');
+      var dbPath = articles.getAttribute("data-db-path");
       var articleId = getParameterByName('id');
       if (articleId == null) {
 
       }
-      fetchPost(articleId);
+      fetchPost(dbPath, articleId);
     });
   </script>
 </section>

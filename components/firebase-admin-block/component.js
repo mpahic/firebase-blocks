@@ -38,6 +38,16 @@ mbrApp.loadComponents("firebase-blocks/components", {
         title: "Show Date",
         default: !0
       },
+      showReadMore: {
+        type: "switch",
+        title: "Show Read more..",
+        default: !0
+      },
+      dbPath: {
+        type: "text",
+        title: "Database path",
+        default: "posts"
+      },
       panelColor: {
         type: "color",
         title: "Panel Color",

@@ -46,7 +46,7 @@
     <div class="row">
 
       <div class="col-sm-12 blog-main" id="firebase-articles" mbr-data-articles-number="_params.articlesNumber" mbr-data-show-author-name="_params.showArticleAuthorName" mbr-data-show-author-image="_params.showArticleAuthorImage" mbr-data-show-date="_params.showArticleDate" mbr-data-date-format="_params.dateFormat"
-        mbr-data-header-bg-color="_params.panelColor" mbr-data-article-page="_params.articlePage">
+        mbr-data-header-bg-color="_params.panelColor" mbr-data-db-path="_params.dbPath" mbr-data-article-page="_params.articlePage" mbr-data-show-read-more="_params.showReadMore" mbr-data-show-older-posts="_params.showOlderPosts">
 
         <div class="blog-post">
           <div class="article-photo" style="float: left" mbr-if="_params.showArticleAuthorImage">
@@ -57,7 +57,7 @@
 
           <p>This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
 
-          <a href="#">Read more...</a>
+          <a mbr-if="_params.showReadMore" href="#">Read more...</a>
           <hr>
         </div>
         <!-- /.blog-post -->
@@ -72,30 +72,45 @@
           <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur
             purus sit amet fermentum.</p>
 
-          <a href="#">Read more...</a>
+          <a mbr-if="_params.showReadMore" href="#">Read more...</a>
           <hr>
-        </div>
-        <!-- /.blog-post -->
+        </div>  <!-- /.blog-post -->
+      </div>  <!-- /.blog-main -->
+    </div>  <!-- /.row -->
 
-        <nav class="blog-pagination navbar-toggler-right">
-          <a class="btn btn-outline-primary" href="#">Older</a>
-          <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
-        </nav>
+    <nav mbr-if="_params.showOlderPosts" class="blog-pagination navbar-toggler-right">
+      <a id="older-posts-button" class="btn btn-outline-primary" href="#" onclick="findPreviousPosts()">Older</a>
+      <a id="newer-posts-button" class="btn btn-outline-secondary disabled" href="#" onclick="findNextPosts()">Newer</a>
+      <script>
+        var hasNewer = false;
+        function findPreviousPosts() {
+            var articles = document.getElementById('firebase-articles');
+            articles.innerHTML = "";
+            var articlesNum = articles.getAttribute("data-articles-number");
+            var dbPath = articles.getAttribute("data-db-path");
+            var recentPostsRef = firebase.database().ref(dbPath).orderByChild("order").limitToFirst(Number(articlesNum)).startAt(lastPostId);
+            var hasNewer = true;
+            fetchPosts(articles, recentPostsRef);
+        }
+        function findNextPosts() {
+            var articles = document.getElementById('firebase-articles');
+            articles.innerHTML = "";
+            var articlesNum = articles.getAttribute("data-articles-number");
+            var dbPath = articles.getAttribute("data-db-path");
+            var recentPostsRef = firebase.database().ref(dbPath).orderByChild("order").limitToFirst(Number(articlesNum)).startAt(lastPostId);
+            fetchPosts(articles, recentPostsRef);
+        }
+      </script>
+    </nav>
 
-      </div>
-      <!-- /.blog-main -->
-
-    </div>
-    <!-- /.row -->
-
-  </div>
-  <!-- /.container -->
+  </div>  <!-- /.container -->
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       var articles = document.getElementById('firebase-articles');
       var articlesNum = articles.getAttribute("data-articles-number");
-      var recentPostsRef = firebase.database().ref('posts').orderByChild("order").limitToFirst(Number(articlesNum));
+      var dbPath = articles.getAttribute("data-db-path");
+      var recentPostsRef = firebase.database().ref(dbPath).orderByChild("order").limitToFirst(Number(articlesNum));
       fetchPosts(articles, recentPostsRef);
     });
   </script>
